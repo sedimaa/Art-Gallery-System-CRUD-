@@ -73,14 +73,12 @@ if ($method === 'POST') {
 
     $image_url = 'uploads/' . $fname;
 
-    // If updating and previous file was in uploads/, delete it hirap neto men
     if ($current && !empty($current['image_url']) && str_starts_with($current['image_url'], 'uploads/')) {
       $old = __DIR__ . '/../' . $current['image_url'];
       if (within_uploads($old) && file_exists($old)) @unlink($old);
     }
   }
 
-  // require some image path (either URL or uploaded)
   if ($image_url === '') back('#addartwork');
 
   if ($id > 0) {
@@ -99,7 +97,6 @@ if ($method === 'POST') {
 if ($method === 'DELETE') {
   $id = (int)($_POST['id'] ?? 0);
   if ($id > 0) {
-    // delete row (and file if local)
     $st = $pdo->prepare("SELECT image_url FROM artworks WHERE id=?");
     $st->execute([$id]);
     $row = $st->fetch();
@@ -119,4 +116,5 @@ if ($method === 'GET') {
   header('Content-Type: application/json; charset=utf-8');
   echo json_encode($pdo->query("SELECT * FROM artworks ORDER BY id DESC")->fetchAll());
   exit;
+
 }
